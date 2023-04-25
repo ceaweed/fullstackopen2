@@ -33,7 +33,9 @@ const App = () => {
     // I think this is where I should add the code to prevent people from adding names that already exist. if exists = use alert, else = do normal code
     if (persons.some(person => person.name === newName)) {
       // Set alert
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook. Would you like to update the number?`)) {
+        updateNumber(personObject)
+      }
       setNewName('')
       setNewNumber('')
     } else {
@@ -46,6 +48,13 @@ const App = () => {
           setNewNumber('')
         })
     }
+  }
+
+  const updateNumber = (personObject) => {
+    const updatePerson = persons.find(p => p.name === personObject.name)
+    phoneService
+      .update(updatePerson.id, personObject)
+      .then(returnedPerson => setPersons(persons.map(person => person.id !== updatePerson.id ? person : returnedPerson)))
   }
 
   // Function to delete a person on button click
