@@ -6,6 +6,7 @@ const PersonsList = (props) => {
         {props.filteredData.map((person) =>
         <p key={person.name}>
           <Person name={person.name} number={person.number} />
+          <button onClick={() => props.deletePerson(person)}>delete</button>
         </p>)}
       </div>
     )
