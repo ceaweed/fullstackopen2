@@ -4,6 +4,7 @@ import Search from './components/Search'
 import AddPersonForm from './components/AddPersonForm'
 import PersonsList from './components/PersonsList'
 import phoneService from './services/phonebook'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -11,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
   const [filteredData, setFilteredData] = useState([])
+  const [notification, setNotification] = useState('')
 
   // Code to get the data from the db.json file
   useEffect(() => {
@@ -44,6 +46,7 @@ const App = () => {
         .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
+          setNotification(`Added '${returnedPerson.name}'`)
           setNewName('')
           setNewNumber('')
         })
@@ -54,7 +57,10 @@ const App = () => {
     const updatePerson = persons.find(p => p.name === personObject.name)
     phoneService
       .update(updatePerson.id, personObject)
-      .then(returnedPerson => setPersons(persons.map(person => person.id !== updatePerson.id ? person : returnedPerson)))
+      .then(returnedPerson => {
+        setPersons(persons.map(person => person.id !== updatePerson.id ? person : returnedPerson))
+        setNotification(`Updated '${returnedPerson.name}'`)
+      })
   }
 
   // Function to delete a person on button click
@@ -65,6 +71,7 @@ const App = () => {
         .remove(person.id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== person.id))
+          setNotification(`Deleted '${person.name}'`)
         })
     } 
   }
@@ -94,6 +101,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification}/>
       <Search newSearch={newSearch} change={handleSearchChange}/>
       <AddPersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
