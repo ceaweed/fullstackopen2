@@ -24,6 +24,11 @@
       "content": "hey",
       "important": false,
       "id": 5
+    },
+    {
+      "content": "hello",
+      "important": true,
+      "id": 6
     }
   ]
 }
